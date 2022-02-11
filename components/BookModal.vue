@@ -42,11 +42,14 @@
 
 <script>
 import { eventBus } from "@/eventBus";
+import { uuid } from 'vue-uuid';
+
 export default {
     data() {
         return {
             errors: [],
             isCardModalActive: false,
+            id: null,
             category: null,
             title: null,
             author: null,
@@ -57,6 +60,7 @@ export default {
     created() {
         eventBus.$on("open-add-book-modal", data => {
             if (data) {
+                this.id = data.id,
                 this.category = data.category;
                 this.title = data.title;
                 this.author = data.author;
@@ -68,6 +72,7 @@ export default {
     methods: {
         async onSubmit(e) {
             let cardData = {
+                id: uuid.v1(),
                 category: this.category,
                 title: this.title,
                 author: this.author,

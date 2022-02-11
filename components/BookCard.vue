@@ -21,6 +21,9 @@
             <div class="content">
                 {{ bookDescription }}
             </div>
+            <div>
+                <slot name="button"></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -28,6 +31,13 @@
 <script>
 import eventBus from "@/eventBus";
 export default {
-    props: ["bookTitle", "bookAuthor", "bookDescription"]
+    props: ["id", "bookTitle", "bookAuthor", "bookDescription"]
 }
 </script>
+
+<style scoped>
+    .card-content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+</style>

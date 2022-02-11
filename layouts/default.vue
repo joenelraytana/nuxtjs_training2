@@ -59,3 +59,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .navbar-item {
+    font-weight: bold;
+  }
+</style>
