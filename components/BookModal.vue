@@ -67,14 +67,17 @@ export default {
     },
     methods: {
         async onSubmit(e) {
-            console.log('submitting...');
             let cardData = {
                 category: this.category,
                 title: this.title,
                 author: this.author,
                 description: this.description
             };
+
+            console.log('Add cardData - ', cardData);
             if (this.title && this.category) {
+                eventBus.$emit("save-book", cardData);
+                this.isCardModalActive = false;
                 return true;
             }
 
@@ -90,12 +93,8 @@ export default {
             if (!this.errors.length) {
                 return true;
             }
+
             e.preventDefault();
-            console.log('Add cardData - ', cardData);
-            if (this.title && this.category) {
-                eventBus.$emit("save-book", cardData);
-                this.isCardModalActive = false;
-            }
         }
     }
 }
