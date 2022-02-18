@@ -31,7 +31,7 @@
                             <b-input v-model="description"></b-input>
                         </b-field>
                         <div class="buttons">
-                            <b-button type="submit" class="is-success" @click="onSubmit">Add Books</b-button>
+                            <b-button type="submit" class="is-success" @click="onSubmit">{{ btnTxt }}</b-button>
                         </div>
                     </div>
                 </div>
@@ -49,6 +49,7 @@ export default {
         return {
             errors: [],
             isCardModalActive: false,
+            btnTxt: "Add Books",
             id: null,
             category: null,
             title: null,
@@ -67,6 +68,18 @@ export default {
                 this.description = data.description;
             }
             this.isCardModalActive = true;
+            this.btnTxt = "Add Books";
+        });
+        eventBus.$on("open-edit-book-modal", data => {
+            if (data) {
+                this.id = data.id,
+                this.category = data.category;
+                this.title = data.title;
+                this.author = data.author;
+                this.description = data.description;
+            }
+            this.isCardModalActive = true;
+            this.btnTxt = "Update Books";
         });
     },
     methods: {
