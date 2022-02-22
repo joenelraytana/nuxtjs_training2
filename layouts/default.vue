@@ -10,18 +10,26 @@
         </b-navbar-item>
       </template>
       <template #start>
-        <NuxtLink
-          v-for="(item, key) of items"
-          :key="key"
-          :to="item.to"
-          class="navbar-item"
-        >
-          {{ item.title }}
-        </NuxtLink>
+        <div class="register nav-header navbar-item" v-if="!isLoggedIn">
+          Register
+        </div>
+        <div class="nav-header" v-else>
+          <NuxtLink
+            v-for="(item, key) of items"
+            :key="key"
+            :to="item.to"
+            class="navbar-item"
+          >
+            {{ item.title }}
+          </NuxtLink>
+        </div>
+        <div class="logout-link nav-header navbar-item" v-if="isLoggedIn" @click="logOut">
+          Logout
+        </div>
       </template>
 
       <template #end>
-          <b-navbar-item tag="div">
+          <b-navbar-item tag="div" v-if="isLoggedIn">
               <div class="buttons">
                  <b-button type="is-primary" @click.stop="openModal">Add Books</b-button>
               </div>
@@ -35,15 +43,19 @@
 </template>
 
 <script>
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 import { eventBus } from "@/eventBus";
+
 export default {
   name: 'DefaultLayout',
   data () {
     return {
+      isLoggedIn: false,
       items: [
         {
           title: 'My Book Store',
-          to: { name: 'index' }
+          to: { name: 'book' }
         },
         {
           title: 'Contact',
@@ -52,16 +64,38 @@ export default {
       ]
     }
   },
+  created() {
+    firebase.auth().onAuthStateChanged( user => {
+      if(user) {
+        console.log('user logged-in - ', user);
+        this.$router.push("/book");
+        this.isLoggedIn = true;
+      } else {
+        this.isLoggedIn = false;
+      }
+    })
+  },
   methods: {
     openModal() {
       eventBus.$emit("open-add-book-modal");
+    },
+    logOut() {
+      eventBus.$emit("open-logout-modal");
     }
   }
 }
 </script>
 
 <style scoped>
+  .nav-header {
+    display: inline-flex;
+  }
   .navbar-item {
     font-weight: bold;
+  }
+  .logout-link  {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #551a8b;
   }
 </style>

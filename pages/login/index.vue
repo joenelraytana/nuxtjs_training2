@@ -1,6 +1,6 @@
 <template>
-    <div class="login content">
-        <h3>BookApp</h3>
+    <div class="login">
+        <h3>Login</h3>
         <form @submit.prevent="pressed">
             <div class="login">
                 <b-field label="Email">
@@ -42,7 +42,7 @@ export default {
                 .signInWithEmailAndPassword(this.email, this.password)
                 .then( data=> {
                 console.log('data - ', data);
-                this.$router.push('/book')
+                this.$router.push('/')
             })
             .catch(error => {this.error = error})
         }
