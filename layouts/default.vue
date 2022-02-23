@@ -46,6 +46,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { eventBus } from "@/eventBus";
+import Cookies from 'js-cookie'
 
 export default {
   name: 'DefaultLayout',
@@ -64,16 +65,8 @@ export default {
       ]
     }
   },
-  created() {
-    firebase.auth().onAuthStateChanged( user => {
-      if(user) {
-        console.log('user logged-in - ', user);
-        this.$router.push("/book");
-        this.isLoggedIn = true;
-      } else {
-        this.isLoggedIn = false;
-      }
-    })
+  mounted() {
+    this.setupFirebase();
   },
   methods: {
     openModal() {
@@ -81,6 +74,25 @@ export default {
     },
     logOut() {
       eventBus.$emit("open-logout-modal");
+    },
+    setupFirebase() {
+      firebase.auth().onAuthStateChanged( user => {
+        if(user) {
+          console.log('user logged-in - ', user);
+          this.$router.push("/book");
+          this.isLoggedIn = true;
+
+          firebase
+          .auth()
+          .currentUser.getIdToken(true)
+          .then(token => {
+            Cookies.set('access_token', token)
+          })
+        } else {
+          this.isLoggedIn = false;
+          Cookies.remove('access_token')
+        }
+      })
     }
   }
 }

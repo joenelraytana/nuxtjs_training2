@@ -1,7 +1,7 @@
 <template>
     <div class="login content">
         <h3>BookApp</h3>
-        <form @submit.prevent="pressed">
+        <form @submit.prevent="loggedIn">
             <div class="login">
                 <b-field label="Email">
                     <b-input type="text" class="input-field" v-model="email" placeholder="email"></b-input>
@@ -13,7 +13,7 @@
                 </b-field>
             </div>
             <div class="buttons">
-                <b-button class="btn-submit is-success" type="submit" @click="pressed">{{ btnTxt }}</b-button>
+                <b-button class="btn-submit is-success" type="submit" @click="loggedIn">{{ btnTxt }}</b-button>
             </div>
         </form>
         <div class="error" v-if="error">
@@ -36,7 +36,7 @@ export default {
         }
     },
     methods: {
-        pressed() {
+        loggedIn() {
             firebase
                 .auth()
                 .signInWithEmailAndPassword(this.email, this.password)

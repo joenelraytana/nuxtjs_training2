@@ -32,8 +32,10 @@ import BookCard from "@/components/BookCard";
 import BookModal from "@/components/BookModal";
 import LogoutModal from "@/components/LogoutModal";
 import { eventBus } from "@/eventBus";
-import { uuid } from 'vue-uuid';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 import { mapState, mapGetters, mapActions, mapMutations} from 'vuex';
+import { getUserFromCookie } from '@/helpers'
 
 export default {
   name: 'IndexPage',
@@ -44,6 +46,19 @@ export default {
   },
   computed: {
     ...mapGetters(['allBooks'])
+  },
+  asyncData({ req, redirect }) {
+    if (process.server) {
+      const user = getUserFromCookie(req);
+      if(!user) {
+        redirect('/')
+      }
+    } else {
+      let user = firebase.auth().currentUser;
+      if(!user) {
+        redirect('/')
+      }
+    }
   },
   created() {
     eventBus.$on("save-book", cardData => {
